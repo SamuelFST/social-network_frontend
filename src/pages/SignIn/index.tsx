@@ -1,19 +1,43 @@
-import { Button, Stack, TextField } from '@mui/material';
-import { Container } from '@mui/system';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
+
+import './index.css';
+import AuthForm from '../../components/AuthForm';
+import axios from '../../api/axios';
+
+interface TokenUser {
+  user: string;
+  profile: string;
+}
 
 const SignIn = () => {
+  const navigate = useNavigate();
+
+  const handleLogin = async (user: string, password: string) => {
+    const response = await axios.post('/security/login', {
+      user,
+      password,
+    });
+
+    const { accessToken } = response.data;
+    localStorage.setItem('accessToken', accessToken);
+
+    const decoded = jwtDecode(accessToken) as TokenUser;
+    localStorage.setItem('user', decoded.user);
+    localStorage.setItem('profile', decoded.profile);
+
+    navigate("/home");
+  };
+
+
   return (
-    <div>
-      <Container maxWidth="sm">
-        <Stack spacing={4}>
-          <h1>Sign-in</h1>
-          <TextField variant="outlined" label="Usuário" />
-          <TextField variant="outlined" label="Senha" />
-          <Button variant="contained">Log-in</Button>
-        </Stack>
-      </Container>
-    </div>
+    <AuthForm
+      onSubmitForm={handleLogin}
+      onSubmitButtonText='Log-in'
+      onRouteText='Não tem uma conta? Faça o cadastro'
+      onRouteLink='/register'
+    />
   );
 }
 
