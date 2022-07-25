@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import axios from "../../api/axios";
 import AuthForm from "../../components/AuthForm";
@@ -8,12 +9,18 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const handleRegister = async (user: string, password: string) => {
-    await axios.post('/security/register', {
-      user,
-      password,
-    });
+    try {
+      await axios.post('/security/register', {
+        user,
+        password,
+      });
 
-    navigate("/");
+      toast.success('Cadastro realizado com sucesso!');
+      navigate("/");
+    } catch (err) {
+      toast.error(`Ocorreu um erro ao tentar se cadastrar, tente novamente`);
+    }
+
   };
 
   return (
