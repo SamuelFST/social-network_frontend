@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 
-import './index.css';
 import AuthForm from '../../components/AuthForm';
 import axios from '../../api/axios';
 

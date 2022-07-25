@@ -4,6 +4,7 @@ import { Container } from '@mui/system';
 import { Link } from 'react-router-dom';
 
 import logo from '../../assets/logo.svg';
+import './index.css';
 
 interface Props {
   onSubmitForm: any;
