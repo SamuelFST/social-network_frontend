@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Paper, CardHeader, Avatar } from '@mui/material';
 
 import Header from '../../components/Header';
+import PostCard from '../../components/PostCard';
 import axios from '../../api/axios';
+import { Divider } from '@mui/material';
 
-interface Post {
-  _id: string;
-  title: string;
-  description: string;
-  profile: {
-    name: string;
-  };
-}
+import { Post } from '../../models/Post';
 
 const Home = () => {
   const token = localStorage.getItem("accessToken");
@@ -39,16 +33,11 @@ const Home = () => {
   return (
     <div>
       <Header title='Home' />
-      <h1 style={{ marginTop: "100px" }}>Feed</h1>
-      <div>
+      <div style={{ marginTop: "56px" }}>
         {posts.map((post) => (
           <div key={post._id}>
-            <Paper elevation={0}>
-              <CardHeader
-                avatar={<Avatar>B</Avatar>}
-                title={post.title}
-              />
-            </Paper>
+            <PostCard post={post} />
+            <Divider />
           </div>
         ))}
       </div>
