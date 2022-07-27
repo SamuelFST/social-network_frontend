@@ -14,6 +14,7 @@ const Home = () => {
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -23,6 +24,7 @@ const Home = () => {
             authorization: `Bearer ${token}`,
           },
         });
+        setHasMore(response.data.length > 0);
         setPosts([...posts, ...response.data]);
       } catch (err) {
         toast.error('Erro ao buscar postagens');
@@ -43,7 +45,7 @@ const Home = () => {
         <InfiniteScroll
           dataLength={posts.length}
           next={loadMorePosts}
-          hasMore={true}
+          hasMore={hasMore}
           loader={<h4>Carregando mais postagens...</h4>}
         >
           {posts &&
