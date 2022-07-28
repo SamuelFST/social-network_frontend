@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Divider } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import PostCard from '../../components/PostCard';
@@ -10,6 +11,7 @@ import { Post } from '../../models/Post';
 import axios from '../../api/axios';
 
 const Home = () => {
+  const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
 
   const [posts, setPosts] = useState<Post[]>([]);
@@ -38,6 +40,10 @@ const Home = () => {
     setPage(page + 1);
   }
 
+  const handlePostClick = (postId: string) => {
+    navigate(`/posts/${postId}`);
+  }
+
   return (
     <div>
       <Header title='Home' />
@@ -51,7 +57,7 @@ const Home = () => {
           {posts &&
             posts.map((post) => (
               <div key={post._id}>
-                <PostCard post={post} />
+                <PostCard post={post} handlePostClick={handlePostClick} />
                 <Divider />
               </div>
             ))}

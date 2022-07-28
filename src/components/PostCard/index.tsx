@@ -8,30 +8,34 @@ import {
   CardActions
 } from '@mui/material';
 
+import './index.css';
 import CustomAvatar from '../CustomAvatar';
-import CustomActionIcon from '../CustomActionIcons';
+import CustomActionIcons from '../CustomActionIcons';
 import { Post } from '../../models/Post';
 
 interface Props {
   post: Post;
+  handlePostClick: any;
 }
 
-const PostCard = ({ post }: Props) => {
+const PostCard = ({ post, handlePostClick }: Props) => {
   return (
     <Paper elevation={0} sx={{ marginX: 24 }}>
-      <CardHeader
-        avatar={<CustomAvatar profileName={post.profile.name} />}
-        title={post.title}
-      />
-      {post.image ? (
-        <CardMedia component="img" image={post.description} alt={post.title} />
-      ) : (
-        <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            {post.description}
-          </Typography>
-        </CardContent>
-      )}
+      <div onClick={() => handlePostClick(post._id)} className="headerDiv">
+        <CardHeader
+          avatar={<CustomAvatar profileName={post.profile.name} />}
+          title={post.title}
+        />
+        {post.image ? (
+          <CardMedia component="img" image={post.description} alt={post.title} />
+        ) : (
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              {post.description}
+            </Typography>
+          </CardContent>
+        )}
+      </div>
       <CardActions>
         <div style={{
           display: "flex",
@@ -39,7 +43,7 @@ const PostCard = ({ post }: Props) => {
           alignItems: "flex-start",
           justifyContent: "start",
         }}>
-          <CustomActionIcon
+          <CustomActionIcons
             commentCount={post.comments.length}
             likeCount={post.likes.length}
             likes={post.likes}
