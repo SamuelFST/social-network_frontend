@@ -2,6 +2,8 @@ import React, { useState, useCallback } from 'react';
 import ImageIcon from '@mui/icons-material/Image';
 import {useDropzone} from 'react-dropzone';
 
+import './index.css';
+
 interface Props {
   onFileUploaded: (file: File) => void;
 }
@@ -25,11 +27,11 @@ function Dropzone({ onFileUploaded }: Props) {
   });
 
   return (
-    <div {...getRootProps()}>
+    <div {...getRootProps()} className="dropzone">
       <input { ...getInputProps() } />
 
       {selectedFileUrl ? (
-        <img src={selectedFileUrl} alt='Point thumbnail' />
+        <img src={selectedFileUrl} alt='Point thumbnail' className='img'/>
       ) : (
         <p>
           <ImageIcon />
