@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { toast } from 'react-toastify';
 
+import logo from '../../assets/logo.svg';
 import AuthForm from '../../components/AuthForm';
 import axios from '../../api/axios';
 
@@ -28,7 +29,10 @@ const SignIn = () => {
       localStorage.setItem('user', decoded.user);
       localStorage.setItem('profile', decoded.profile);
 
-      toast.success(`Seja bem vindo ${decoded.user}`);
+      toast.info(`Seja bem vindo, ${decoded.user}!`, {
+        icon: () =>  <img src={logo} alt="parrot logo"/>,
+      });
+
       navigate("/home");
     } catch (err) {
       toast.error(`Ocorreu um erro ao fazer login`);

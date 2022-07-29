@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 import axios from "../../api/axios";
 import AuthForm from "../../components/AuthForm";
+import logo from '../../assets/logo.svg';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -15,7 +16,10 @@ const SignUp = () => {
         password,
       });
 
-      toast.success('Cadastro realizado com sucesso!');
+      toast.success('Cadastro realizado com sucesso!', {
+        icon: () =>  <img src={logo} alt="parrot logo"/>,
+      });
+
       navigate("/");
     } catch (err) {
       toast.error(`Ocorreu um erro ao tentar se cadastrar, tente novamente`);
