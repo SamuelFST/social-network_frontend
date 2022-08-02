@@ -1,11 +1,13 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { AppBar, Toolbar, Typography, Box, Badge } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
 import {
   Home as HomeIcon,
   Edit as EditIcon,
   Group as GroupIcon,
   AccountCircle as AccountCircleIcon,
+  Mail as MailIcon
 } from '@mui/icons-material';
 import CustomIconButton from '../CustomIconButton';
 
@@ -15,6 +17,63 @@ interface Props {
 
 const Header = ({ title }: Props) => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
+  const [messageCount, setMessageCount] = useState(0);
+
+  const socket = io("http://192.168.1.77:4000/v1", {
+    auth: { token },
+    secure: true,
+  });
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log(socket);
+    });
+
+    socket.on("connect_profile", (profile) => {
+      console.log(profile);
+    });
+
+    socket.on("disconnect", () => {
+      console.log(socket);
+    });
+
+    socket.on("post", (data) => {
+      console.log(data);
+      setMessageCount((count) => count + 1);
+    });
+
+    socket.on("post-like", (data) => {
+      console.log(data);
+      setMessageCount((count) => count + 1);
+    });
+
+    socket.on("comment", (data) => {
+      console.log(data);
+      setMessageCount((count) => count + 1);
+    });
+
+    socket.on("comment-like", (data) => {
+      console.log(data);
+      setMessageCount((count) => count + 1);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log(err);
+    });
+
+    return () => {
+      socket.off();
+    };
+  }, [token, socket]);
+
+  const handleClickEmail = () => {
+    if (messageCount) {
+      setMessageCount(0);
+      window.location.reload();
+    }
+  };
+
 
   return (
     <AppBar position="fixed">
@@ -24,13 +83,18 @@ const Header = ({ title }: Props) => {
           noWrap
           component="div"
           sx={{ display: { cs: "none", sm: "block" } }}
-        >
+          >
           {title}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           <CustomIconButton label='show home' onClickCallback={() => navigate('/home')}>
             <HomeIcon />
+          </CustomIconButton>
+          <CustomIconButton label='notifications' onClickCallback={handleClickEmail}>
+            <Badge badgeContent={messageCount} color="secondary">
+              <MailIcon />
+            </Badge>
           </CustomIconButton>
           <CustomIconButton label='show edit' onClickCallback={() => navigate('/create')}>
             <EditIcon />
