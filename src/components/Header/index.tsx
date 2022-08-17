@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { AppBar, Toolbar, Typography, Box, Badge } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import { toast } from 'react-toastify';
+
 import {
   Home as HomeIcon,
   Edit as EditIcon,
@@ -35,31 +37,31 @@ const Header = ({ title }: Props) => {
     });
 
     socket.on("disconnect", () => {
-      console.log(socket);
+      toast.error('A conexão foi perdida');
     });
 
     socket.on("post", (data) => {
-      console.log(data);
+      toast.info(`${data.profile.name} criou um novo Post`);
       setMessageCount((count) => count + 1);
     });
 
     socket.on("post-like", (data) => {
-      console.log(data);
+      toast.info(`${data} curtiu seu Post`);
       setMessageCount((count) => count + 1);
     });
 
     socket.on("comment", (data) => {
-      console.log(data);
+      toast.info(`${data} comentou no seu Post`);
       setMessageCount((count) => count + 1);
     });
 
     socket.on("comment-like", (data) => {
-      console.log(data);
+      toast.info(`${data} curtiu seu comentário`);
       setMessageCount((count) => count + 1);
     });
 
     socket.on("connect_error", (err) => {
-      console.log(err);
+      toast.error('Não foi possível estabelecer conexão');
     });
 
     return () => {
