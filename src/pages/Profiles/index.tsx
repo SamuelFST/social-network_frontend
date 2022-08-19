@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Stack, CardHeader, Divider, Typography, CardContent, Button } from '@mui/material';
+import { Paper, Stack, CardHeader, Divider, Typography, CardContent, Button, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 
 import Header from '../../components/Header';
@@ -17,6 +17,8 @@ const Profiles = () => {
   const token = localStorage.getItem("accessToken");
   const actualProfileId = localStorage.getItem("profile");
   const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [searchResult, setSearchResult] = useState<Profile[]>([]);
+  const renderProfiles = searchResult.length > 0 ? searchResult : profiles;
 
   useEffect(() => {
     const getProfiles = async () => {
@@ -58,24 +60,57 @@ const Profiles = () => {
         } else {
           return profile;
         }
-      })
-      setProfiles(newProfiles);
+      });
+
+      searchResult.length > 0 ? (
+        setSearchResult(newProfiles.filter((profile) => searchResult.map((p) => p._id).includes(profile._id)))
+      ) : setProfiles(newProfiles);
+      console.log(searchResult)
     } catch (err) {
       toast.error('Ocorreu um erro ao tentar seguir');
+    }
+  }
+
+  const findUsers = async (search: string) => {
+    try {
+      const response = await axios.get(`/profiles/search?q=${search}`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      setSearchResult(response.data);
+    } catch (err) {
+      toast.error('Ocorreu um erro ao buscar um usuário')
     }
   }
 
   return (
     <div>
       <Header title='Perfis' />
-      <div style={{ marginTop: "72px" }}>
+      <div style={{ margin: "84px 15px 0px 15px", }}>
+        <Stack
+          direction="column"
+          justifyContent="center"
+          spacing={6}
+          alignItems="stretch"
+        >
+          <TextField
+            variant='outlined'
+            placeholder='Procurar um usuário pelo nome...'
+            label='Buscar por nome'
+            name='userSearch'
+            onChange={(e) => findUsers(e.target.value)}
+          />
+        </Stack>
+      </div>
+      <div style={{ marginTop: "15px" }}>
         <Stack
           direction="column"
           justifyContent="center"
           alignItems="stretch"
           spacing={2}
         >
-          {profiles.map((profile) => (
+          {renderProfiles.map((profile) => (
             <div key={profile._id}>
               <Paper elevation={0}>
                 <CardHeader
