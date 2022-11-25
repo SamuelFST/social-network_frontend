@@ -22,7 +22,7 @@ const Header = ({ title }: Props) => {
   const token = localStorage.getItem("accessToken");
   const [messageCount, setMessageCount] = useState(0);
 
-  const socket = io("http://192.168.1.77:4000/v1", {
+  const socket = io("http://localhost:4000/v1", {
     auth: { token },
     secure: true,
   });
